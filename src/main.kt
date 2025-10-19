@@ -1,21 +1,14 @@
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.BasicText
-import androidx.compose.material.Button
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -23,14 +16,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelStore
+import androidx.lifecycle.ViewModelStoreOwner
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
+import androidx.lifecycle.viewmodel.compose.viewModel
 import compose.icons.FeatherIcons
-import compose.icons.feathericons.Clock
 import compose.icons.feathericons.Eye
 import compose.icons.feathericons.EyeOff
-import compose.icons.feathericons.Key
 import compose.icons.feathericons.Lock
-
 import compose.icons.feathericons.User
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -96,7 +92,7 @@ fun Add_count() {
 //        var count = remember { mutableStateOf(0) }
         // 使用委托
         var count by remember { mutableStateOf(0) }
-        BasicText("${count}")
+        BasicText("$count")
         Button(onClick = { count++ }) {
             BasicText("增加")
         }
@@ -117,6 +113,68 @@ fun Add_count_less(count: Int, onChange: () -> Unit) {
 
 @Composable
 @Preview
+fun LazyColumnSample() {
+    val data: SnapshotStateList<Int> = remember {
+        mutableStateListOf<Int>().apply {
+            addAll(1..100)
+        }
+    }
+    LazyColumn(
+        modifier = Modifier.fillMaxSize().padding(32.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        item {
+            Row(
+                modifier = Modifier.fillMaxWidth().background(Color.LightGray),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Button(onClick = { data.add(data.size) }) { Text("add") }
+                Button(onClick = { data.removeLast() }) { Text("remove") }
+                Button(onClick = { data.clear() }) { Text("clear") }
+            }
+        }
+        items(data) {
+            Text("${it}", fontSize = 40.sp)
+        }
+    }
+}
+
+class MyViewModel : ViewModel() {
+
+    var count by mutableStateOf(0)
+        private set
+
+    fun updateCount() {
+        count++
+    }
+
+}
+
+
+@Composable
+@Preview
+fun CountSample(
+    count: Int,
+    updateCount: () -> Unit,
+    modifier: Modifier
+) {
+    Column(
+        modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        BasicText("${count}")
+        Button(onClick = updateCount) {
+            BasicText("改变")
+        }
+    }
+
+}
+
+@Composable
+@Preview
 fun App() {
     MaterialTheme {
         Column(
@@ -125,6 +183,7 @@ fun App() {
             horizontalAlignment = Alignment.CenterHorizontally, // 垂直居中
         ) {
             Text("我是世界", fontSize = 16.sp)
+
             BasicText("Hello, World!")
             Button(
                 onClick = { println("Hello, World!") },
@@ -140,12 +199,80 @@ fun App() {
             }
 
             test_input()
+//
+//            Column(
+//                modifier = Modifier
+//                    .padding(32.dp)
+//                    .verticalScroll(rememberScrollState())
+//            ) {
+//                repeat(100) {
+//                    Text("${it}", fontSize = 32.sp)
+//                }
+//            }
+
+//            LazyColumnSample()
+
+            val snackbarHostState = remember { SnackbarHostState() }
+            val scope = rememberCoroutineScope()
+            // 消息显示的位置
+            SnackbarHost(hostState = snackbarHostState)
+            Button(
+                onClick = {
+                    scope.launch {
+                        snackbarHostState.showSnackbar(
+                            "这是一条消息",
+                            actionLabel = "确认", duration = SnackbarDuration.Short
+                        )
+                    }
+                },
+                content = {
+                    Text("这是一条消息")
+                }
+            )
+
+
         }
     }
 }
 
+@Composable
+@Preview
+fun App2(myViewModel: MyViewModel) {
+    MaterialTheme {
+        Column(
+            modifier = Modifier.fillMaxSize(),// 充满整个屏幕
+            verticalArrangement = Arrangement.Center, // 水平居中
+            horizontalAlignment = Alignment.CenterHorizontally, // 垂直居中
+        ) {
+            CountSample(
+                count = myViewModel.count, updateCount = myViewModel::updateCount,
+                modifier = Modifier
+            )
+        }
+    }
+}
+
+// 1. 创建自定义 ViewModelStoreOwner
+class DesktopViewModelStoreOwner : ViewModelStoreOwner {
+    override val viewModelStore = ViewModelStore()
+}
+
 fun main() = application {
     Window(onCloseRequest = ::exitApplication) {
-        App()
+
+        // 创建一个 ViewModelStoreOwner（例如使用 AndroidX 的 ViewModelStoreOwner）
+//        val owner = DesktopViewModelStoreOwner()
+//        val owner by remember { mutableStateOf(DesktopViewModelStoreOwner()) }
+        val owner = remember { DesktopViewModelStoreOwner() }
+
+        // 将其提供给 Compose 树
+        CompositionLocalProvider(LocalViewModelStoreOwner provides owner) {
+            MaterialTheme {
+                val myViewModel: MyViewModel = viewModel() // 现在可以正常获取
+                // 使用你的 UI
+                App2(myViewModel)
+            }
+        }
+//        App()
     }
 }

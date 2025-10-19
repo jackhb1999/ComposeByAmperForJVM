@@ -4,6 +4,8 @@ dependencies:
   - $compose.desktop.currentOs
 #  - br.com.devsrsouza.compose.icons:font-awesome:1.1.1
   - br.com.devsrsouza.compose.icons:feather:1.1.1
+  - androidx.lifecycle:lifecycle-viewmodel-compose:2.9.4
+  - androidx.lifecycle:lifecycle-runtime:2.9.4
 
 settings:
   compose: enabled
