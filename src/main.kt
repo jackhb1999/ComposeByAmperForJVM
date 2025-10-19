@@ -1,10 +1,16 @@
 import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.material.*
+//import androidx.compose.material.icons.Icons
+//import androidx.compose.material.icons.filled.Lock
+//import androidx.compose.material.icons.filled.Person
+//import androidx.compose.material.icons.filled.Visibility
+//import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
@@ -21,13 +27,9 @@ import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
-import compose.icons.FeatherIcons
-import compose.icons.feathericons.Eye
-import compose.icons.feathericons.EyeOff
-import compose.icons.feathericons.Lock
-import compose.icons.feathericons.User
 import kotlinx.coroutines.launch
-
+import org.jetbrains.compose.resources.Resource
+import org.jetbrains.compose.resources.painterResource
 
 @Composable
 @Preview
@@ -39,12 +41,12 @@ fun test_input() {
             value = username,
             onValueChange = { username = it },
             leadingIcon = {
-                Icon(
+//                Icon(
+////                    imageVector = Icons.Default.Person,
 //                    imageVector = Icons.Default.Person,
-                    imageVector = FeatherIcons.User,
-                    contentDescription = "用户名图标",
-                    tint = Color.Blue,
-                )
+//                    contentDescription = "用户名图标",
+//                    tint = Color.Blue,
+//                )
             },
             label = { Text("用户名") },
             placeholder = { Text("请输入用户名") }, singleLine = true
@@ -58,11 +60,11 @@ fun test_input() {
             value = password,
             onValueChange = { password = it },
             leadingIcon = {
-                Icon(
-                    imageVector = FeatherIcons.Lock,
-                    contentDescription = "密码图标",
-                    tint = Color.Blue,
-                )
+//                Icon(
+//                    imageVector = Icons.Default.Lock,
+//                    contentDescription = "密码图标",
+//                    tint = Color.Blue,
+//                )
             },
             label = { Text("密码") },
             placeholder = { Text("请输入密码") },
@@ -72,11 +74,11 @@ fun test_input() {
                         passwordVisibility = !passwordVisibility
                     }
                 ) {
-                    Icon(
-                        imageVector = if (passwordVisibility) FeatherIcons.Eye else FeatherIcons.EyeOff,
-                        contentDescription = "密码图标",
-                        tint = Color.Blue
-                    )
+//                    Icon(
+//                        imageVector = if (passwordVisibility) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+//                        contentDescription = "密码图标",
+//                        tint = Color.Blue
+//                    )
                 }
             },
             visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
@@ -230,24 +232,31 @@ fun App() {
                 }
             )
 
-
         }
     }
 }
 
 @Composable
 @Preview
-fun App2(myViewModel: MyViewModel) {
+//fun App2(myViewModel: MyViewModel) {
+fun App2() {
     MaterialTheme {
         Column(
             modifier = Modifier.fillMaxSize(),// 充满整个屏幕
             verticalArrangement = Arrangement.Center, // 水平居中
             horizontalAlignment = Alignment.CenterHorizontally, // 垂直居中
         ) {
+            val myViewModel: MyViewModel = viewModel() // 现在可以正常获取
             CountSample(
                 count = myViewModel.count, updateCount = myViewModel::updateCount,
                 modifier = Modifier
             )
+
+//            Image(
+//                painter = painterResource("drawable/19.gif"),
+//                contentDescription = "Sample",
+//                modifier = Modifier.fillMaxSize()
+//            )
         }
     }
 }
@@ -268,11 +277,13 @@ fun main() = application {
         // 将其提供给 Compose 树
         CompositionLocalProvider(LocalViewModelStoreOwner provides owner) {
             MaterialTheme {
-                val myViewModel: MyViewModel = viewModel() // 现在可以正常获取
+//                val myViewModel: MyViewModel = viewModel() // 现在可以正常获取
                 // 使用你的 UI
-                App2(myViewModel)
+//                App2(myViewModel)
+                App2()
             }
         }
+
 //        App()
     }
 }

@@ -2,13 +2,25 @@ product: jvm/app
 
 dependencies:
   - $compose.desktop.currentOs
-#  - br.com.devsrsouza.compose.icons:font-awesome:1.1.1
-  - br.com.devsrsouza.compose.icons:feather:1.1.1
+    #  - br.com.devsrsouza.compose.icons:font-awesome:1.1.1 #品牌图片
+#  - br.com.devsrsouza.compose.icons:feather:1.1.1  # feather图标库
+#  - $compose.material
+#  - $compose.material3
+#  - $compose.materialIconsCore
+  #  - $compose.materialIconsExtended
+  - $compose.components.resources
   - androidx.lifecycle:lifecycle-viewmodel-compose:2.9.4
   - androidx.lifecycle:lifecycle-runtime:2.9.4
 
 settings:
-  compose: enabled
+  compose:
+    enabled: true
+    experimental:
+      hotReload:
+        enabled: false
 
 repositories:
-  - https://mirrors.cloud.tencent.com/nexus/repository/maven-public/
+  - https://repo.spring.io/ui/native/release
+  - url: https://dl.google.com/dl/android/maven2/
+  - id: jitpack
+    url: https://jitpack.io
