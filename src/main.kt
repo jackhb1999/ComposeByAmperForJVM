@@ -13,6 +13,7 @@ import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 import cafe.adriel.voyager.transitions.SlideTransition
 import screen.HomeScreen
+import screen.LoginScreen
 import tab.HomeTab
 import tab.ProfileTab
 import tab.SettingTab
@@ -36,36 +37,17 @@ fun main() = application {
 //                CountView()
 //                SignUpView()
 //                LoginView()
-
+                Navigator(LoginScreen()) { navigator ->
+                    SlideTransition(navigator)
+                }
 //                Navigator(HomeScreen()) { navigator ->
 //                    SlideTransition(navigator)
 //                }
 
-                TabNavigator(HomeTab) {
-                    Scaffold(bottomBar = {
-                        BottomNavigation {
-                            TabNavigationItem(HomeTab)
-                            TabNavigationItem(ProfileTab)
-                            TabNavigationItem(SettingTab)
-                        }
 
-                    }) {
-                        CurrentTab()
-                    }
-                }
             }
         }
     }
 }
 
 
-@Composable
-private fun RowScope.TabNavigationItem(tab: Tab) {
-    val tabNavigator = LocalTabNavigator.current
-    BottomNavigationItem(
-        selected = tabNavigator.current == tab,
-        onClick = { tabNavigator.current = tab },
-        icon = { tab.options.icon?.let { Icon(it, contentDescription = null) } },
-        label = { Text(tab.options.title) }
-    )
-}

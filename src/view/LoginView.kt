@@ -20,20 +20,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import cafe.adriel.voyager.navigator.LocalNavigator
 import components.ButtonHeight
 import components.CustomTextField
 import components.LargeSpacing
 import components.MediumSpacing
+import screen.HomeScreen
 import viewmodel.LoginViewModel
 import viewmodel.SignUpViewModel
 
 @Composable
 @Preview
 fun LoginView(
+    goAway:() -> Unit,
     vm: LoginViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
-
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(LargeSpacing),
@@ -67,9 +69,7 @@ fun LoginView(
         )
 
         Button(
-            onClick = {
-
-            },
+            onClick = goAway,
             modifier = modifier.fillMaxWidth().height(ButtonHeight),
             elevation = ButtonDefaults.elevation(
                 defaultElevation = 0.dp,
