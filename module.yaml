@@ -4,13 +4,21 @@ dependencies:
   - $compose.desktop.currentOs
     #  - br.com.devsrsouza.compose.icons:font-awesome:1.1.1 #品牌图片
 #  - br.com.devsrsouza.compose.icons:feather:1.1.1  # feather图标库
-#  - $compose.material
-#  - $compose.material3
-#  - $compose.materialIconsCore
-  #  - $compose.materialIconsExtended
+  - $libs.compose.materialIconsCore
+  - $libs.compose.materialIconsExtended
   - $compose.components.resources
   - androidx.lifecycle:lifecycle-viewmodel-compose:2.9.4
   - androidx.lifecycle:lifecycle-runtime:2.9.4
+  - dev.jonpoulton.timber:timber:6.0.0
+#  - $libs.androidx.navigation3.runtime
+#  - $libs.androidx.navigation3.ui
+#  - $libs.androidx.lifecycle.viewmodel.navigation3
+#  - $libs.androidx.material3.adaptive.navigation3
+#  - $libs.kotlinx.serialization.core
+  - cafe.adriel.voyager:voyager-navigator:1.1.0-beta03
+  - cafe.adriel.voyager:voyager-tab-navigator:1.1.0-beta03
+  - cafe.adriel.voyager:voyager-transitions:1.1.0-beta03
+
 
 settings:
   compose:
@@ -18,6 +26,8 @@ settings:
     experimental:
       hotReload:
         enabled: false
+#  kotlin:
+#    serialization: true
 
 repositories:
   - https://repo.spring.io/ui/native/release
